@@ -11,7 +11,6 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
             background: #ffe3e3;
             font-family: 'Arial', sans-serif;
             margin: 0;
@@ -20,9 +19,17 @@
             touch-action: none;
         }
 
-        h1 { color: #ff4d6d; text-align: center; z-index: 10; padding: 20px; font-size: 1.8rem; pointer-events: none; }
+        h1 { 
+            color: #ff4d6d; 
+            text-align: center; 
+            z-index: 10; 
+            margin-top: 20vh;
+            padding: 20px; 
+            font-size: 1.8rem; 
+            pointer-events: none; 
+        }
 
-        /* YES button stays in the middle */
+        /* YES button - fixed in place */
         #yesBtn {
             padding: 15px 40px;
             font-size: 1.2rem;
@@ -32,10 +39,11 @@
             border-radius: 50px;
             cursor: pointer;
             z-index: 100;
-            position: relative;
+            margin-top: 50px;
+            transition: transform 0.1s;
         }
 
-        /* NO button starts below but moves independently */
+        /* NO button - starts AWAY from the Yes button */
         #noBtn {
             padding: 10px 25px;
             font-size: 1rem;
@@ -45,7 +53,7 @@
             border-radius: 50px;
             position: fixed;
             left: 50%;
-            top: 70%;
+            bottom: 15vh; /* Starts near the bottom of the screen */
             transform: translateX(-50%);
             z-index: 110;
             touch-action: none;
@@ -93,41 +101,35 @@
         setInterval(createRose, 300);
 
         function moveNo() {
-            // Sends email that she tried to hit No
             sendNotification("She tried to click NO! 😂");
 
             const btn = document.getElementById('noBtn');
-            const padding = 100;
             
-            // Forces the button to jump to a random spot on the WHOLE screen
-            const x = Math.random() * (window.innerWidth - btn.offsetWidth - padding) + (padding/2);
-            const y = Math.random() * (window.innerHeight - btn.offsetHeight - padding) + (padding/2);
+            // Randomly jump anywhere EXCEPT the center where 'Yes' is
+            const x = Math.random() * (window.innerWidth - btn.offsetWidth);
+            const y = Math.random() * (window.innerHeight - btn.offsetHeight);
             
             btn.style.left = x + 'px';
             btn.style.top = y + 'px';
+            btn.style.bottom = 'auto'; // Remove the initial bottom setting
             btn.style.transform = 'none';
 
-            // Make ONLY the Yes button grow
+            // Grow the Yes button
             const yes = document.getElementById('yesBtn');
-            const currentSize = parseFloat(window.getComputedStyle(yes).fontSize);
-            yes.style.fontSize = (currentSize + 3) + 'px';
-            yes.style.padding = (currentSize + 5) + 'px';
+            const currentScale = yes.style.transform ? parseFloat(yes.style.transform.replace('scale(', '')) : 1;
+            yes.style.transform = `scale(${currentScale + 0.15})`;
         }
 
         function celebrate() {
-            // Sends final Yes email
             sendNotification("SHE SAID YES! ❤️🌹");
 
             document.getElementById('question').innerHTML = "Yay! Happy Rose Day My Love! 🌹❤️";
-            
-            // REMOVE ONLY THE NO BUTTON
             document.getElementById('noBtn').remove();
             
-            // CHANGE YES BUTTON TEXT
             const yes = document.getElementById('yesBtn');
             yes.innerHTML = "I Love You! 😘";
-            yes.style.fontSize = "1.5rem";
-            yes.onclick = null; // stop further clicks
+            yes.style.transform = "scale(1.2)";
+            yes.onclick = null;
             
             document.body.style.background = "#ffb3c1";
             setInterval(createRose, 100);
