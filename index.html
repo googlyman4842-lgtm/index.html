@@ -7,6 +7,7 @@
     <style>
         body {
             height: 100vh;
+            width: 100vw;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -16,48 +17,56 @@
             margin: 0;
             overflow: hidden;
             position: relative;
+            touch-action: none; /* Prevents phone zooming/scrolling */
         }
-        h1 { color: #ff4d6d; text-align: center; z-index: 10; padding: 20px; text-shadow: 2px 2px 4px rgba(0,0,0,0.1); }
-        
+
+        h1 { 
+            color: #ff4d6d; 
+            text-align: center; 
+            z-index: 10; 
+            padding: 20px; 
+            font-size: 1.8rem;
+            pointer-events: none; /* Prevents text from blocking touches */
+        }
+
         #yesBtn {
-            padding: 15px 30px;
+            padding: 15px 40px;
             font-size: 1.2rem;
             background: #ff4d6d;
             color: white;
             border: none;
-            border-radius: 10px;
+            border-radius: 50px;
             cursor: pointer;
             z-index: 100;
-            transition: all 0.2s;
-        }
-        
-        #noBtn {
-            padding: 15px 30px;
-            font-size: 1.2rem;
-            background: #ccc;
-            border: none;
-            border-radius: 10px;
-            position: fixed; /* Free movement */
-            left: 50%;
-            top: 60%;
-            transform: translateX(-50%);
-            z-index: 100;
+            box-shadow: 0 4px 15px rgba(255, 77, 109, 0.3);
         }
 
-        /* Rose Falling Animation */
+        #noBtn {
+            padding: 10px 25px;
+            font-size: 1rem;
+            background: #ffffff;
+            color: #333;
+            border: 1px solid #ccc;
+            border-radius: 50px;
+            position: fixed; /* Free movement across screen */
+            left: 50%;
+            top: 65%;
+            transform: translateX(-50%);
+            z-index: 100;
+            touch-action: none;
+        }
+
         .rose {
             position: absolute;
             top: -50px;
             font-size: 24px;
-            user-select: none;
             z-index: 5;
             animation: fall linear infinite;
+            pointer-events: none;
         }
 
         @keyframes fall {
-            to {
-                transform: translateY(110vh) rotate(360deg);
-            }
+            to { transform: translateY(110vh) rotate(360deg); }
         }
     </style>
 </head>
@@ -65,41 +74,47 @@
 
     <h1 id="question">Happy Rose Day! 🌹<br>Will you be my Rose?</h1>
     
-    <div style="display: flex; gap: 20px;">
-        <button id="yesBtn" onclick="celebrate()">Yes</button>
-        <button id="noBtn" onmouseover="moveNo()" ontouchstart="moveNo()" onclick="moveNo()">No</button>
-    </div>
+    <button id="yesBtn" onclick="celebrate()">Yes</button>
+    <button id="noBtn" onpointerdown="moveNo()">No</button>
 
     <script>
-        // Function to create falling roses
+        const FORMSPREE_URL = "https://formspree.io/f/xaqdyqjq";
+
+        function sendNotification(msg) {
+            fetch(FORMSPREE_URL, {
+                method: "POST",
+                body: JSON.stringify({ message: msg }),
+                headers: { 'Content-Type': 'application/json' }
+            }).catch(err => console.log("Email error"));
+        }
+
         function createRose() {
             const rose = document.createElement('div');
             rose.classList.add('rose');
             rose.innerHTML = '🌹';
             rose.style.left = Math.random() * 100 + "vw";
-            rose.style.animationDuration = Math.random() * 3 + 2 + "s"; // Between 2-5 seconds
-            rose.style.opacity = Math.random();
+            rose.style.animationDuration = Math.random() * 3 + 2 + "s";
             document.body.appendChild(rose);
-
-            // Remove rose after it falls to keep the site fast
-            setTimeout(() => {
-                rose.remove();
-            }, 5000);
+            setTimeout(() => { rose.remove(); }, 5000);
         }
-
-        // Create a new rose every 300 milliseconds
         setInterval(createRose, 300);
 
         function moveNo() {
+            // 1. Notify you she tried to hit No
+            sendNotification("She tried to click NO! 😂");
+
             const btn = document.getElementById('noBtn');
-            const x = Math.random() * (window.innerWidth - btn.offsetWidth);
-            const y = Math.random() * (window.innerHeight - btn.offsetHeight);
+            
+            // 2. Calculate jump coordinates within mobile screen
+            const padding = 60;
+            const x = Math.random() * (window.innerWidth - btn.offsetWidth - padding) + (padding/2);
+            const y = Math.random() * (window.innerHeight - btn.offsetHeight - padding) + (padding/2);
             
             btn.style.left = x + 'px';
             btn.style.top = y + 'px';
-            btn.style.transform = 'none';
+            btn.style.transform = 'none'; // Breaks the initial centering
 
-            // Make Yes button grow
+            // 3. Make the Yes button grow
             const yes = document.getElementById('yesBtn');
             const currentSize = parseFloat(window.getComputedStyle(yes).fontSize);
             yes.style.fontSize = (currentSize + 2) + 'px';
@@ -107,12 +122,15 @@
         }
 
         function celebrate() {
+            // 1. Final Yes notification
+            sendNotification("SHE SAID YES! ❤️🌹");
+
             document.getElementById('question').innerHTML = "Yay! Happy Rose Day My Love! 🌹❤️";
             document.getElementById('noBtn').style.display = "none";
-            document.getElementById('yesBtn').style.display = "none";
+            document.getElementById('yesBtn').innerHTML = "I Love You! 😘";
             document.body.style.background = "#ffb3c1";
             
-            // Speed up roses on success!
+            // 2. Explode with more roses
             setInterval(createRose, 100);
         }
     </script>
