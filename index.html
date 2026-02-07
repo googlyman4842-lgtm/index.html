@@ -11,65 +11,75 @@
             height: 100vh; width: 100vw;
             background: radial-gradient(circle at center, #420a2b 0%, #000000 100%);
             display: flex; flex-direction: column; align-items: center;
-            overflow: hidden; font-family: 'Arial', sans-serif;
+            overflow: hidden; font-family: 'Dancing Script', cursive;
             position: relative;
         }
 
-        /* Shining Stars */
+        /* Tiny Shining Stars Background */
         .star {
             position: absolute; background: white; border-radius: 50%;
             opacity: 0.8; animation: blink 2s infinite;
         }
         @keyframes blink { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
 
-        /* Text - Word by Word Side Slide */
+        /* Text Area - Word by Word Side Slide */
         .text-box { margin-top: 15vh; text-align: center; z-index: 50; }
         .word { 
-            display: inline-block; opacity: 0; transform: translateX(-50px); 
-            animation: slideIn 0.6s forwards; font-family: 'Dancing Script', cursive;
+            display: inline-block; opacity: 0; transform: translateX(-60px); 
+            animation: slideIn 0.6s forwards;
             font-size: 2.8rem; color: white; text-shadow: 0 0 15px #ff4d6d; margin: 0 8px;
         }
 
         /* Buttons Container */
         .btn-row { 
-            display: flex; gap: 40px; margin-top: 80px; z-index: 100; 
+            display: flex; gap: 30px; margin-top: 60px; z-index: 100; 
             justify-content: center; align-items: center; width: 100%;
         }
 
-        /* EXACT HEART YES BUTTON */
+        /* High-Visibility Glowing Heart YES Button */
         #yesBtn {
-            width: 140px; height: 140px;
-            background: url('https://cdn-icons-png.flaticon.com/512/833/833472.png') no-repeat center;
-            background-size: contain; border: none; cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            color: white; font-size: 1.6rem; font-weight: bold; font-family: 'Dancing Script', cursive;
-            opacity: 0; filter: drop-shadow(0 0 20px #ff0040);
-            animation: slideInLeft 0.8s forwards 2.5s, heartbeat 1.5s infinite 3.5s;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            width: 140px; height: 130px; background: transparent;
+            border: none; cursor: pointer; position: relative;
+            opacity: 0; animation: slideInLeft 0.8s forwards 2.2s, heartbeat 1.5s infinite 3s;
+        }
+        .heart-shape {
+            position: absolute; width: 70px; height: 110px;
+            background: #ff0040; border-radius: 50px 50px 0 0;
+            box-shadow: 0 0 30px #ff0040; top: 0;
+        }
+        .h-left { left: 70px; transform: rotate(-45deg); transform-origin: 0 100%; }
+        .h-right { left: 0px; transform: rotate(45deg); transform-origin: 100% 100%; }
+        #yesBtn span {
+            position: absolute; width: 100%; left: 0; top: 35px;
+            color: white; font-size: 1.6rem; font-weight: bold; z-index: 10;
         }
 
-        /* GLASS NO BUTTON */
+        /* Glass Circle NO Button */
         #noBtn {
             width: 100px; height: 100px; background: rgba(255, 255, 255, 0.1);
-            border: 3px solid white; border-radius: 50%; color: white;
-            font-size: 1.4rem; font-style: italic; font-family: 'Dancing Script', cursive;
-            cursor: pointer; backdrop-filter: blur(10px); opacity: 0;
-            animation: slideInRight 0.8s forwards 2.7s;
+            border: 2px solid white; border-radius: 50%; color: white;
+            font-size: 1.4rem; font-style: italic; cursor: pointer;
+            backdrop-filter: blur(10px); opacity: 0;
+            animation: slideInRight 0.8s forwards 2.4s;
             display: flex; align-items: center; justify-content: center;
         }
 
-        /* REAL ROSE PETALS */
+        /* Falling Petals (Ptya) */
         .petal { 
-            position: absolute; width: 25px; height: 25px;
-            background: url('https://w7.pngwing.com/pngs/506/133/png-transparent-rose-petal-flower-petal-red-rose-petals-leaf-color-plant-stem-thumbnail.png') no-repeat center;
-            background-size: contain; z-index: 5; animation: fall 7s linear infinite; 
+            position: absolute; background: #ff4d6d; 
+            width: 15px; height: 20px; border-radius: 0 80% 0 80%;
+            z-index: 5; animation: fall 6s linear infinite; 
         }
 
+        /* Animations */
         @keyframes slideIn { to { opacity: 1; transform: translateX(0); } }
         @keyframes slideInLeft { from { transform: translateX(-200px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         @keyframes slideInRight { from { transform: translateX(200px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         @keyframes heartbeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
-        @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
+        @keyframes fall { 
+            0% { transform: translateY(-10vh) rotate(0deg); }
+            100% { transform: translateY(110vh) rotate(360deg); } 
+        }
     </style>
 </head>
 <body>
@@ -82,15 +92,19 @@
     </div>
 
     <div class="btn-row">
-        <button id="yesBtn" onclick="celebrate()">Yes</button>
+        <button id="yesBtn" onclick="celebrate()">
+            <div class="heart-shape h-left"></div>
+            <div class="heart-shape h-right"></div>
+            <span>Yes</span>
+        </button>
         <button id="noBtn" onpointerdown="moveNo()">No</button>
     </div>
 
     <script>
         const link = "https://formspree.io/f/xaqdyqjq";
 
-        // 1. Twinkling Stars
-        for (let i = 0; i < 70; i++) {
+        // 1. Shining Stars
+        for (let i = 0; i < 60; i++) {
             let s = document.createElement('div');
             s.className = 'star';
             s.style.width = s.style.height = Math.random() * 3 + 'px';
@@ -99,7 +113,7 @@
             document.getElementById('stars').appendChild(s);
         }
 
-        // 2. Word by Word Animation
+        // 2. Word by Word side slide
         function show(text, id, delay) {
             const el = document.getElementById(id);
             text.split(" ").forEach((w, i) => {
@@ -110,18 +124,18 @@
             });
         }
         show("Happy Propose Day! 💍", "l1", 0.3);
-        show("Will you be mine?", "l2", 1.5);
+        show("Will you be mine?", "l2", 1.3);
 
-        // 3. Falling Petals
+        // 3. Falling Petals (Ptya)
         setInterval(() => {
             let p = document.createElement('div');
-            p.className = 'petal';
+            p.className = 'petal'; 
             p.style.left = Math.random() * 100 + 'vw';
-            p.style.top = '-50px';
-            p.style.transform = `rotate(${Math.random() * 360}deg)`;
+            p.style.top = '-30px';
+            p.style.opacity = Math.random();
             document.body.appendChild(p);
-            setTimeout(() => p.remove(), 7000);
-        }, 400);
+            setTimeout(() => p.remove(), 6000);
+        }, 300);
 
         function moveNo() {
             fetch(link, { method: "POST", body: JSON.stringify({ m: "Tried No" }), headers: {'Content-Type': 'application/json'} });
@@ -129,14 +143,13 @@
             b.style.position = 'fixed';
             b.style.left = Math.random() * (window.innerWidth - 100) + 'px';
             b.style.top = Math.random() * (window.innerHeight - 100) + 'px';
-            document.getElementById('yesBtn').style.transform = "scale(1.4)";
         }
 
         function celebrate() {
             fetch(link, { method: "POST", body: JSON.stringify({ m: "YES! ❤️" }), headers: {'Content-Type': 'application/json'} });
             document.querySelector('.text-box').innerHTML = "<h1 class='word' style='opacity:1; transform:none;'>Forever Yours! ❤️💍</h1>";
             document.getElementById('noBtn').remove();
-            document.getElementById('yesBtn').innerHTML = "I Do!";
+            document.getElementById('yesBtn').querySelector('span').innerText = "I Do!";
             document.getElementById('yesBtn').style.animation = "heartbeat 0.5s infinite";
         }
     </script>
