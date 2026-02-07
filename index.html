@@ -4,127 +4,124 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Happy Propose Day ❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
         body {
             height: 100vh; width: 100vw;
-            /* Exact Deep Midnight Background */
-            background: radial-gradient(circle at center, #3a0823 0%, #000000 100%);
+            background: radial-gradient(circle at center, #420a2b 0%, #000000 100%);
             display: flex; flex-direction: column; align-items: center;
             overflow: hidden; font-family: 'Arial', sans-serif;
             position: relative;
         }
 
-        /* Twinkling Stars */
+        /* Shining Stars */
         .star {
             position: absolute; background: white; border-radius: 50%;
-            opacity: 0.8; animation: twinkle 2s infinite;
+            opacity: 0.8; animation: blink 2s infinite;
         }
-        @keyframes twinkle { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+        @keyframes blink { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
 
-        /* Text Styling - Word by Word Side Slide */
-        .text-container { margin-top: 15vh; text-align: center; z-index: 50; padding: 0 20px; }
+        /* Text - Word by Word Side Slide */
+        .text-box { margin-top: 15vh; text-align: center; z-index: 50; }
         .word { 
-            display: inline-block; opacity: 0; transform: translateX(-40px); 
-            animation: slideIn 0.5s forwards;
-            font-size: 2.2rem; color: #ffffff; font-weight: bold;
-            text-shadow: 0 0 10px #ff4d6d, 0 0 5px white;
-            margin: 0 4px;
+            display: inline-block; opacity: 0; transform: translateX(-50px); 
+            animation: slideIn 0.6s forwards; font-family: 'Dancing Script', cursive;
+            font-size: 2.8rem; color: white; text-shadow: 0 0 15px #ff4d6d; margin: 0 8px;
         }
 
         /* Buttons Container */
-        .btn-box { display: flex; gap: 40px; margin-top: 50px; z-index: 100; position: relative; }
-
-        /* Traditional CSS Heart for "Yes" Button */
-        .heart-btn {
-            position: relative; width: 100px; height: 90px;
-            background: none; border: none; cursor: pointer;
-            opacity: 0; animation: fadeIn 0.8s forwards 2s;
-        }
-        .heart-shape {
-            position: absolute; width: 50px; height: 80px;
-            background: #ff0040; border-radius: 50px 50px 0 0;
-            box-shadow: 0 0 20px #ff0040;
-        }
-        .left-side { left: 50px; transform: rotate(-45deg); transform-origin: 0 100%; }
-        .right-side { left: 0; transform: rotate(45deg); transform-origin: 100% 100%; }
-        .heart-btn span {
-            position: absolute; width: 100%; top: 25px; left: 0;
-            color: white; font-weight: bold; font-size: 1.2rem; z-index: 10;
+        .btn-row { 
+            display: flex; gap: 40px; margin-top: 80px; z-index: 100; 
+            justify-content: center; align-items: center; width: 100%;
         }
 
-        /* Glass Circle for "No" Button */
+        /* EXACT HEART YES BUTTON */
+        #yesBtn {
+            width: 140px; height: 140px;
+            background: url('https://cdn-icons-png.flaticon.com/512/833/833472.png') no-repeat center;
+            background-size: contain; border: none; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 1.6rem; font-weight: bold; font-family: 'Dancing Script', cursive;
+            opacity: 0; filter: drop-shadow(0 0 20px #ff0040);
+            animation: slideInLeft 0.8s forwards 2.5s, heartbeat 1.5s infinite 3.5s;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        /* GLASS NO BUTTON */
         #noBtn {
-            width: 90px; height: 90px; background: rgba(255, 255, 255, 0.1);
-            border: 2px solid rgba(255, 255, 255, 0.5); border-radius: 50%;
-            color: white; font-size: 1.1rem; font-style: italic;
-            cursor: pointer; backdrop-filter: blur(8px);
-            opacity: 0; animation: fadeIn 0.8s forwards 2.2s;
+            width: 100px; height: 100px; background: rgba(255, 255, 255, 0.1);
+            border: 3px solid white; border-radius: 50%; color: white;
+            font-size: 1.4rem; font-style: italic; font-family: 'Dancing Script', cursive;
+            cursor: pointer; backdrop-filter: blur(10px); opacity: 0;
+            animation: slideInRight 0.8s forwards 2.7s;
+            display: flex; align-items: center; justify-content: center;
         }
 
-        /* Falling Petals */
-        .petal { position: absolute; color: #ff4d6d; font-size: 22px; animation: fall 6s linear infinite; }
+        /* REAL ROSE PETALS */
+        .petal { 
+            position: absolute; width: 25px; height: 25px;
+            background: url('https://w7.pngwing.com/pngs/506/133/png-transparent-rose-petal-flower-petal-red-rose-petals-leaf-color-plant-stem-thumbnail.png') no-repeat center;
+            background-size: contain; z-index: 5; animation: fall 7s linear infinite; 
+        }
 
         @keyframes slideIn { to { opacity: 1; transform: translateX(0); } }
-        @keyframes fadeIn { to { opacity: 1; } }
+        @keyframes slideInLeft { from { transform: translateX(-200px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes slideInRight { from { transform: translateX(200px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes heartbeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
         @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
-        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
     </style>
 </head>
 <body>
 
     <div id="stars"></div>
 
-    <div class="text-container">
-        <div id="line1"></div>
-        <div id="line2" style="margin-top: 10px; font-style: italic; font-size: 0.8em;"></div>
+    <div class="text-box">
+        <div id="l1"></div>
+        <div id="l2" style="margin-top: 10px;"></div>
     </div>
 
-    <div class="btn-box">
-        <button class="heart-btn" id="yesBtn" onclick="celebrate()" style="animation: fadeIn 0.8s forwards 2s, pulse 1.5s infinite 3s;">
-            <div class="heart-shape left-side"></div>
-            <div class="heart-shape right-side"></div>
-            <span>Yes</span>
-        </button>
+    <div class="btn-row">
+        <button id="yesBtn" onclick="celebrate()">Yes</button>
         <button id="noBtn" onpointerdown="moveNo()">No</button>
     </div>
 
     <script>
         const link = "https://formspree.io/f/xaqdyqjq";
 
-        // Create 60 Stars
-        for (let i = 0; i < 60; i++) {
+        // 1. Twinkling Stars
+        for (let i = 0; i < 70; i++) {
             let s = document.createElement('div');
             s.className = 'star';
-            s.style.width = s.style.height = Math.random() * 2 + 1 + 'px';
+            s.style.width = s.style.height = Math.random() * 3 + 'px';
             s.style.top = Math.random() * 100 + 'vh';
             s.style.left = Math.random() * 100 + 'vw';
             document.getElementById('stars').appendChild(s);
         }
 
-        // Word-by-Word Side Slide
-        function animateText(text, id, start) {
+        // 2. Word by Word Animation
+        function show(text, id, delay) {
             const el = document.getElementById(id);
             text.split(" ").forEach((w, i) => {
                 let s = document.createElement('span');
                 s.className = 'word'; s.innerText = w;
-                s.style.animationDelay = (start + i * 0.2) + "s";
+                s.style.animationDelay = (delay + i * 0.3) + "s";
                 el.appendChild(s);
             });
         }
-        animateText("Happy Propose Day! 💍", "line1", 0.3);
-        animateText("Will you be mine?", "line2", 1.2);
+        show("Happy Propose Day! 💍", "l1", 0.3);
+        show("Will you be mine?", "l2", 1.5);
 
-        // Falling Petals
+        // 3. Falling Petals
         setInterval(() => {
             let p = document.createElement('div');
-            p.className = 'petal'; p.innerHTML = '🍃';
+            p.className = 'petal';
             p.style.left = Math.random() * 100 + 'vw';
-            p.style.top = '-20px';
+            p.style.top = '-50px';
+            p.style.transform = `rotate(${Math.random() * 360}deg)`;
             document.body.appendChild(p);
-            setTimeout(() => p.remove(), 6000);
-        }, 500);
+            setTimeout(() => p.remove(), 7000);
+        }, 400);
 
         function moveNo() {
             fetch(link, { method: "POST", body: JSON.stringify({ m: "Tried No" }), headers: {'Content-Type': 'application/json'} });
@@ -132,14 +129,15 @@
             b.style.position = 'fixed';
             b.style.left = Math.random() * (window.innerWidth - 100) + 'px';
             b.style.top = Math.random() * (window.innerHeight - 100) + 'px';
+            document.getElementById('yesBtn').style.transform = "scale(1.4)";
         }
 
         function celebrate() {
             fetch(link, { method: "POST", body: JSON.stringify({ m: "YES! ❤️" }), headers: {'Content-Type': 'application/json'} });
-            document.querySelector('.text-container').innerHTML = "<h1 class='word' style='opacity:1; transform:none;'>Forever Yours! ❤️💍</h1>";
+            document.querySelector('.text-box').innerHTML = "<h1 class='word' style='opacity:1; transform:none;'>Forever Yours! ❤️💍</h1>";
             document.getElementById('noBtn').remove();
-            document.querySelector('#yesBtn span').innerText = "I Do!";
-            document.getElementById('yesBtn').style.animation = "pulse 0.5s infinite";
+            document.getElementById('yesBtn').innerHTML = "I Do!";
+            document.getElementById('yesBtn').style.animation = "heartbeat 0.5s infinite";
         }
     </script>
 </body>
