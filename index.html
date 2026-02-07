@@ -5,104 +5,113 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Happy Propose Day ❤️</title>
     <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
             height: 100vh;
             width: 100vw;
             display: flex;
             flex-direction: column;
             align-items: center;
-            /* Deep Midnight Romantic Background */
-            background: radial-gradient(circle at center, #2d0b2e 0%, #0a010a 100%);
+            /* Deep Midnight Purple/Black Gradient like the image */
+            background: radial-gradient(circle at center, #4a0e2e 0%, #050105 100%);
             font-family: 'Arial', sans-serif;
-            margin: 0;
             overflow: hidden;
             position: relative;
             touch-action: none;
         }
 
-        /* Star & Bubble Layer */
+        /* Starry Background Particles */
         .stars {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
             background: transparent url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/123163/stars.png') repeat;
+            opacity: 0.4;
             z-index: 1;
-            opacity: 0.5;
         }
 
-        /* Entrance Animation for Text */
-        h1 { 
-            color: #ffffff; 
-            text-align: center; 
-            z-index: 10; 
-            margin-top: 20vh;
-            padding: 20px; 
-            font-size: 2.2rem; 
-            text-shadow: 0 0 15px #ff4d6d;
-            animation: fadeInDown 1.5s ease-out;
-            pointer-events: none; 
+        /* Glowing Text Styling */
+        .container {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            margin-top: 15vh;
+            animation: fadeIn 2s ease-in;
         }
 
-        /* Pulsing "Heartbeat" Yes Button */
+        h1 {
+            color: #ffffff;
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px #ff4d6d;
+            line-height: 1.4;
+        }
+
+        .sub-text {
+            color: #ffffff;
+            font-size: 1.8rem;
+            margin-top: 10px;
+            font-style: italic;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Glowing Heart Yes Button */
         #yesBtn {
-            padding: 18px 50px;
-            font-size: 1.3rem;
-            background: #ff4d6d;
+            padding: 15px 45px;
+            font-size: 1.5rem;
+            background: radial-gradient(circle, #ff4d6d, #ff0040);
             color: white;
             border: none;
             border-radius: 50px;
             cursor: pointer;
             z-index: 100;
-            margin-top: 30px;
-            box-shadow: 0 0 20px rgba(255, 77, 109, 0.6);
-            animation: heartbeat 1.5s infinite, fadeInUp 2s ease-out;
+            margin-top: 40px;
+            box-shadow: 0 0 30px rgba(255, 77, 109, 0.8);
+            position: relative;
+            animation: heartbeat 1.5s infinite;
+            transition: 0.2s;
         }
 
+        /* Glassmorphism No Button */
         #noBtn {
-            padding: 10px 25px;
-            font-size: 1rem;
+            padding: 10px 30px;
+            font-size: 1.2rem;
             background: rgba(255, 255, 255, 0.1);
             color: #ffffff;
-            border: 1px solid rgba(255,255,255,0.3);
+            border: 2px solid rgba(255, 255, 255, 0.4);
             border-radius: 50px;
             position: fixed;
             left: 50%;
-            bottom: 12vh;
+            bottom: 15vh;
             transform: translateX(-50%);
             z-index: 110;
-            touch-action: none;
-            backdrop-filter: blur(5px);
-            animation: fadeInUp 2.5s ease-out;
+            backdrop-filter: blur(10px);
+            cursor: pointer;
         }
 
-        /* Falling Elements */
-        .falling {
+        /* Falling Hearts & Petals */
+        .particle {
             position: absolute;
             top: -50px;
             z-index: 5;
             animation: fall linear infinite;
             pointer-events: none;
+            filter: drop-shadow(0 0 5px rgba(255, 77, 109, 0.5));
         }
 
         @keyframes fall {
-            to { transform: translateY(110vh) rotate(360deg); }
+            to { transform: translateY(110vh) rotate(360deg); opacity: 0; }
         }
 
         @keyframes heartbeat {
-            0% { transform: scale(1); }
-            10% { transform: scale(1.1); }
-            20% { transform: scale(1); }
-            30% { transform: scale(1.1); }
-            100% { transform: scale(1); }
+            0% { transform: scale(1); box-shadow: 0 0 20px #ff4d6d; }
+            50% { transform: scale(1.1); box-shadow: 0 0 40px #ff4d6d; }
+            100% { transform: scale(1); box-shadow: 0 0 20px #ff4d6d; }
         }
 
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-50px); }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
             to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translate(-50%, 50px); }
-            to { opacity: 1; transform: translate(-50%, 0); }
         }
     </style>
 </head>
@@ -110,9 +119,13 @@
 
     <div class="stars"></div>
 
-    <h1 id="question">Happy Propose Day! 💍<br>Will you be mine forever?</h1>
-    
-    <button id="yesBtn" onclick="celebrate()">Yes</button>
+    <div class="container">
+        <h1 id="mainTitle">Happy Propose Day! 💍</h1>
+        <p class="sub-text" id="subTitle">Will you be mine forever?</p>
+        
+        <button id="yesBtn" onclick="celebrate()">Yes</button>
+    </div>
+
     <button id="noBtn" onpointerdown="moveNo()">No</button>
 
     <script>
@@ -126,46 +139,59 @@
             });
         }
 
-        function createFalling() {
-            const el = document.createElement('div');
-            el.classList.add('falling');
-            el.innerHTML = Math.random() > 0.5 ? '💖' : '🌹';
-            el.style.left = Math.random() * 100 + "vw";
-            el.style.fontSize = Math.random() * 20 + 15 + "px";
-            el.style.animationDuration = Math.random() * 3 + 2 + "s";
-            el.style.opacity = Math.random();
-            document.body.appendChild(el);
-            setTimeout(() => { el.remove(); }, 5000);
+        // Create random floating hearts and rose petals
+        function createParticles() {
+            const p = document.createElement('div');
+            p.classList.add('particle');
+            const types = ['💖', '🌹', '✨', '🌸'];
+            p.innerHTML = types[Math.floor(Math.random() * types.length)];
+            p.style.left = Math.random() * 100 + "vw";
+            p.style.fontSize = Math.random() * 25 + 15 + "px";
+            p.style.animationDuration = Math.random() * 3 + 3 + "s";
+            p.style.opacity = Math.random() * 0.5 + 0.5;
+            document.body.appendChild(p);
+            setTimeout(() => { p.remove(); }, 6000);
         }
-        setInterval(createFalling, 200);
+        setInterval(createParticles, 250);
 
         function moveNo() {
             sendNotification("PROPOSE DAY: She tried to click NO! 😂");
             const btn = document.getElementById('noBtn');
-            const x = Math.random() * (window.innerWidth - btn.offsetWidth - 40) + 20;
-            const y = Math.random() * (window.innerHeight - btn.offsetHeight - 40) + 20;
+            
+            // Randomly jump within the safe area of the screen
+            const x = Math.random() * (window.innerWidth - btn.offsetWidth - 50) + 25;
+            const y = Math.random() * (window.innerHeight - btn.offsetHeight - 50) + 25;
+            
             btn.style.left = x + 'px';
             btn.style.top = y + 'px';
             btn.style.bottom = 'auto';
             btn.style.transform = 'none';
-            btn.style.animation = 'none'; // Stop initial animation on move
 
+            // Make the Yes button grow more noticeably
             const yes = document.getElementById('yesBtn');
             const currentSize = parseFloat(window.getComputedStyle(yes).fontSize);
-            yes.style.fontSize = (currentSize + 2) + 'px';
+            yes.style.fontSize = (currentSize + 3) + 'px';
             yes.style.padding = (currentSize + 5) + 'px';
         }
 
         function celebrate() {
             sendNotification("PROPOSE DAY: SHE SAID YES! ❤️💍");
-            document.getElementById('question').innerHTML = "You've made me the happiest person! ❤️💍";
+            
+            document.getElementById('mainTitle').innerHTML = "I'm the luckiest person! ❤️💍";
+            document.getElementById('subTitle').innerHTML = "Happy Propose Day, My Love!";
+            
             document.getElementById('noBtn').remove();
+            
             const yes = document.getElementById('yesBtn');
             yes.innerHTML = "Forever & Always! 😘";
-            yes.style.animation = "heartbeat 0.5s infinite"; // Faster heartbeat on success
+            yes.style.animation = "heartbeat 0.6s infinite"; // Rapid heart rate for excitement
             yes.onclick = null;
-            document.body.style.background = "radial-gradient(circle at center, #7a0d2e 0%, #2d0b2e 100%)";
-            setInterval(createFalling, 100);
+
+            // Intensify the background glow
+            document.body.style.background = "radial-gradient(circle at center, #800e3f 0%, #050105 100%)";
+            
+            // Shower of love!
+            setInterval(createParticles, 100);
         }
     </script>
 </body>
