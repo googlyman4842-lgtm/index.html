@@ -4,99 +4,106 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Happy Propose Day ❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
         body {
             height: 100vh; width: 100vw;
-            /* Exact Midnight Glow Background */
             background: radial-gradient(circle at center, #420a2b 0%, #000000 100%);
             display: flex; flex-direction: column; align-items: center;
-            overflow: hidden; font-family: 'Georgia', serif;
-            position: relative;
+            overflow: hidden; font-family: 'Arial', sans-serif;
         }
 
-        /* Shining Tiny Stars */
+        /* Shining Stars Background */
         .star {
             position: absolute; background: white; border-radius: 50%;
-            opacity: 0.7; animation: blink 2s infinite;
+            opacity: 0.8; animation: blink 2s infinite;
         }
         @keyframes blink { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
 
-        /* Text Area */
+        /* Text Area - Word by Word Side Slide */
         .text-box { margin-top: 15vh; text-align: center; z-index: 50; }
-        
         .word { 
-            display: inline-block; opacity: 0; transform: translateX(-40px); 
-            animation: slideIn 0.7s forwards;
-            font-size: 2.5rem; color: white;
-            text-shadow: 0 0 15px #ff4d6d, 0 0 5px white;
-            margin: 0 6px;
+            display: inline-block; opacity: 0; transform: translateX(-50px); 
+            animation: slideIn 0.6s forwards; font-family: 'Dancing Script', cursive;
+            font-size: 3rem; color: white; text-shadow: 0 0 15px #ff4d6d; margin: 0 8px;
         }
 
-        /* Button Design - Image Accurate */
-        .btn-row { display: flex; gap: 40px; margin-top: 50px; z-index: 100; }
+        /* Buttons Container */
+        .btn-row { 
+            display: flex; gap: 30px; margin-top: 60px; z-index: 100; 
+            justify-content: center; align-items: center; width: 100%;
+        }
 
+        /* Smooth Glowing Heart YES Button */
         #yesBtn {
             width: 120px; height: 110px; background: #ff0040;
-            border: none; cursor: pointer; color: white;
-            font-size: 1.3rem; font-weight: bold;
-            /* Precise Smooth Heart Shape */
-            clip-path: path('M12 4.435c-1.989-5.399-12-4.597-12 3.568 0 4.06 3.06 6.06 12 14.125 8.94-8.065 12-10.065 12-14.125 0-8.165-10.011-8.967-12-3.568z');
-            transform: scale(4.5); /* Scaled to look perfect on mobile */
+            color: white; font-weight: bold; border: none; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; font-size: 1.4rem;
+            /* Heart Shape CSS */
+            position: relative; opacity: 0;
+            animation: slideInLeft 0.8s forwards 2.2s, heartbeat 1.5s infinite 3s;
             box-shadow: 0 0 30px #ff0040;
-            opacity: 0; animation: slideInLeft 1s forwards 2.2s, pulse 1.5s infinite 3s;
+            border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%; /* Smoother base */
         }
+        #yesBtn::before, #yesBtn::after {
+            content: ""; position: absolute; top: 0; width: 60px; height: 90px;
+            background: #ff0040; border-radius: 50px 50px 0 0;
+        }
+        #yesBtn::before { left: 60px; transform: rotate(-45deg); transform-origin: 0 100%; }
+        #yesBtn::after { left: 0; transform: rotate(45deg); transform-origin: 100% 100%; }
+        #yesBtn span { position: relative; z-index: 10; margin-top: -10px; }
 
+        /* Glass Circle NO Button */
         #noBtn {
-            width: 95px; height: 95px; background: rgba(255, 255, 255, 0.1);
-            border: 2px solid rgba(255, 255, 255, 0.5); border-radius: 50%;
-            color: white; font-size: 1.1rem; font-style: italic;
-            cursor: pointer; backdrop-filter: blur(8px);
-            opacity: 0; animation: slideInRight 1s forwards 2.4s;
+            width: 100px; height: 100px; background: rgba(255, 255, 255, 0.1);
+            border: 2px solid white; border-radius: 50%; color: white;
+            font-size: 1.3rem; font-style: italic; cursor: pointer;
+            backdrop-filter: blur(10px); opacity: 0;
+            animation: slideInRight 0.8s forwards 2.4s;
             display: flex; align-items: center; justify-content: center;
         }
 
-        /* Realistic Falling Petals */
-        .petal { position: absolute; color: #ff4d6d; font-size: 22px; animation: fall 7s linear infinite; }
+        /* Falling Petals */
+        .petal { position: absolute; color: #ff4d6d; font-size: 24px; animation: fall 6s linear infinite; }
 
         /* Animations */
         @keyframes slideIn { to { opacity: 1; transform: translateX(0); } }
-        @keyframes slideInLeft { from { transform: translateX(-150px) scale(4.5); opacity: 0; } to { transform: translateX(0) scale(4.5); opacity: 1; } }
+        @keyframes slideInLeft { from { transform: translateX(-150px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         @keyframes slideInRight { from { transform: translateX(150px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-        @keyframes pulse { 0%, 100% { filter: drop-shadow(0 0 5px #ff0040); } 50% { filter: drop-shadow(0 0 20px #ff0040); } }
-        @keyframes fall { to { transform: translateY(110vh) rotate(720deg); } }
+        @keyframes heartbeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+        @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
     </style>
 </head>
 <body>
 
-    <div id="star-layer"></div>
+    <div id="stars"></div>
 
     <div class="text-box">
         <div id="l1"></div>
-        <div id="l2" style="margin-top: 15px; font-style: italic; font-size: 0.9em;"></div>
+        <div id="l2" style="margin-top: 10px;"></div>
     </div>
 
     <div class="btn-row">
-        <button id="yesBtn" onclick="celebrate()">Yes</button>
+        <button id="yesBtn" onclick="celebrate()"><span>Yes</span></button>
         <button id="noBtn" onpointerdown="moveNo()">No</button>
     </div>
 
     <script>
-        const form = "https://formspree.io/f/xaqdyqjq";
+        const link = "https://formspree.io/f/xaqdyqjq";
 
-        // Generate Tiny Twinkling Stars
-        for (let i = 0; i < 70; i++) {
+        // 1. Stars
+        for (let i = 0; i < 60; i++) {
             let s = document.createElement('div');
             s.className = 'star';
-            s.style.width = s.style.height = Math.random() * 2 + 1 + 'px';
+            s.style.width = s.style.height = Math.random() * 3 + 'px';
             s.style.top = Math.random() * 100 + 'vh';
             s.style.left = Math.random() * 100 + 'vw';
-            document.getElementById('star-layer').appendChild(s);
+            document.getElementById('stars').appendChild(s);
         }
 
-        // Word-by-Word Side Slide Animation
-        function animate(text, id, delay) {
+        // 2. Word by Word side slide
+        function show(text, id, delay) {
             const el = document.getElementById(id);
             text.split(" ").forEach((w, i) => {
                 let s = document.createElement('span');
@@ -105,35 +112,33 @@
                 el.appendChild(s);
             });
         }
-        animate("Happy Propose Day! 💍", "l1", 0.3);
-        animate("Will you be mine?", "l2", 1.4);
+        show("Happy Propose Day! 💍", "l1", 0.3);
+        show("Will you be mine?", "l2", 1.3);
 
-        // Falling Flower Petals
+        // 3. Falling Petals (Individual pieces, not flowers)
         setInterval(() => {
             let p = document.createElement('div');
-            p.className = 'petal'; p.innerHTML = Math.random() > 0.5 ? '🌸' : '🌹';
+            p.className = 'petal'; p.innerHTML = '🍃'; 
             p.style.left = Math.random() * 100 + 'vw';
-            p.style.top = '-20px';
+            p.style.top = '-30px';
             document.body.appendChild(p);
-            setTimeout(() => p.remove(), 7000);
+            setTimeout(() => p.remove(), 6000);
         }, 500);
 
         function moveNo() {
-            fetch(form, { method: "POST", body: JSON.stringify({ m: "She hit No!" }), headers: {'Content-Type': 'application/json'} });
+            fetch(link, { method: "POST", body: JSON.stringify({ m: "No attempt" }), headers: {'Content-Type': 'application/json'} });
             const b = document.getElementById('noBtn');
             b.style.position = 'fixed';
             b.style.left = Math.random() * (window.innerWidth - 100) + 'px';
             b.style.top = Math.random() * (window.innerHeight - 100) + 'px';
-            document.getElementById('yesBtn').style.filter = "drop-shadow(0 0 50px #ff0040)";
         }
 
         function celebrate() {
-            fetch(form, { method: "POST", body: JSON.stringify({ m: "YES! ❤️" }), headers: {'Content-Type': 'application/json'} });
+            fetch(link, { method: "POST", body: JSON.stringify({ m: "YES!" }), headers: {'Content-Type': 'application/json'} });
             document.querySelector('.text-box').innerHTML = "<h1 class='word' style='opacity:1; transform:none;'>Forever Yours! ❤️💍</h1>";
             document.getElementById('noBtn').remove();
-            const y = document.getElementById('yesBtn');
-            y.innerHTML = "I Do!";
-            y.style.animation = "pulse 0.4s infinite";
+            document.getElementById('yesBtn').innerHTML = "<span>I Do!</span>";
+            document.getElementById('yesBtn').style.animation = "heartbeat 0.5s infinite";
         }
     </script>
 </body>
