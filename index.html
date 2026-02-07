@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Happy Rose Day ❤️</title>
+    <title>Happy Propose Day ❤️</title>
     <style>
         body {
             height: 100vh;
@@ -29,7 +29,6 @@
             pointer-events: none; 
         }
 
-        /* YES button - fixed in place */
         #yesBtn {
             padding: 15px 40px;
             font-size: 1.2rem;
@@ -43,7 +42,6 @@
             transition: transform 0.1s;
         }
 
-        /* NO button - starts AWAY from the Yes button */
         #noBtn {
             padding: 10px 25px;
             font-size: 1rem;
@@ -53,7 +51,7 @@
             border-radius: 50px;
             position: fixed;
             left: 50%;
-            bottom: 15vh; /* Starts near the bottom of the screen */
+            bottom: 15vh;
             transform: translateX(-50%);
             z-index: 110;
             touch-action: none;
@@ -73,7 +71,7 @@
 </head>
 <body>
 
-    <h1 id="question">Happy Rose Day! 🌹<br>Will you be my Rose?</h1>
+    <h1 id="question">Happy Propose Day! 💍<br>Will you be mine forever?</h1>
     
     <button id="yesBtn" onclick="celebrate()">Yes</button>
     <button id="noBtn" onpointerdown="moveNo()">No</button>
@@ -101,33 +99,30 @@
         setInterval(createRose, 300);
 
         function moveNo() {
-            sendNotification("She tried to click NO! 😂");
+            sendNotification("PROPOSE DAY: She tried to click NO! 😂");
 
             const btn = document.getElementById('noBtn');
-            
-            // Randomly jump anywhere EXCEPT the center where 'Yes' is
             const x = Math.random() * (window.innerWidth - btn.offsetWidth);
             const y = Math.random() * (window.innerHeight - btn.offsetHeight);
             
             btn.style.left = x + 'px';
             btn.style.top = y + 'px';
-            btn.style.bottom = 'auto'; // Remove the initial bottom setting
+            btn.style.bottom = 'auto';
             btn.style.transform = 'none';
 
-            // Grow the Yes button
             const yes = document.getElementById('yesBtn');
             const currentScale = yes.style.transform ? parseFloat(yes.style.transform.replace('scale(', '')) : 1;
-            yes.style.transform = `scale(${currentScale + 0.15})`;
+            yes.style.transform = `scale(${currentScale + 0.2})`;
         }
 
         function celebrate() {
-            sendNotification("SHE SAID YES! ❤️🌹");
+            sendNotification("PROPOSE DAY: SHE SAID YES! ❤️💍");
 
-            document.getElementById('question').innerHTML = "Yay! Happy Rose Day My Love! 🌹❤️";
+            document.getElementById('question').innerHTML = "I'm the luckiest person! Happy Propose Day! ❤️💍";
             document.getElementById('noBtn').remove();
             
             const yes = document.getElementById('yesBtn');
-            yes.innerHTML = "I Love You! 😘";
+            yes.innerHTML = "Forever & Always! 😘";
             yes.style.transform = "scale(1.2)";
             yes.onclick = null;
             
