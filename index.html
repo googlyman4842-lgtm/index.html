@@ -11,8 +11,8 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            /* Romantic Gradient Background */
-            background: linear-gradient(135deg, #ffafbd 0%, #ffc3a0 100%);
+            /* Deep Midnight Romantic Background */
+            background: radial-gradient(circle at center, #2d0b2e 0%, #0a010a 100%);
             font-family: 'Arial', sans-serif;
             margin: 0;
             overflow: hidden;
@@ -20,25 +20,25 @@
             touch-action: none;
         }
 
-        /* Floating Bokeh Effects */
-        body::before {
-            content: "";
+        /* Star & Bubble Layer */
+        .stars {
             position: absolute;
-            width: 100%;
-            height: 100%;
-            background-image: radial-gradient(circle, rgba(255,255,255,0.3) 1px, transparent 1px);
-            background-size: 50px 50px;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: transparent url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/123163/stars.png') repeat;
             z-index: 1;
+            opacity: 0.5;
         }
 
+        /* Entrance Animation for Text */
         h1 { 
             color: #ffffff; 
             text-align: center; 
             z-index: 10; 
             margin-top: 20vh;
             padding: 20px; 
-            font-size: 2rem; 
-            text-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+            font-size: 2.2rem; 
+            text-shadow: 0 0 15px #ff4d6d;
+            animation: fadeInDown 1.5s ease-out;
             pointer-events: none; 
         }
 
@@ -53,22 +53,16 @@
             cursor: pointer;
             z-index: 100;
             margin-top: 30px;
-            box-shadow: 0 10px 20px rgba(255, 77, 109, 0.4);
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.08); }
-            100% { transform: scale(1); }
+            box-shadow: 0 0 20px rgba(255, 77, 109, 0.6);
+            animation: heartbeat 1.5s infinite, fadeInUp 2s ease-out;
         }
 
         #noBtn {
             padding: 10px 25px;
             font-size: 1rem;
-            background: rgba(255, 255, 255, 0.9);
-            color: #333;
-            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border: 1px solid rgba(255,255,255,0.3);
             border-radius: 50px;
             position: fixed;
             left: 50%;
@@ -76,25 +70,45 @@
             transform: translateX(-50%);
             z-index: 110;
             touch-action: none;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            backdrop-filter: blur(5px);
+            animation: fadeInUp 2.5s ease-out;
         }
 
-        .floating-heart {
+        /* Falling Elements */
+        .falling {
             position: absolute;
-            font-size: 24px;
+            top: -50px;
             z-index: 5;
-            animation: floatUp linear infinite;
+            animation: fall linear infinite;
             pointer-events: none;
-            opacity: 0.7;
         }
 
-        @keyframes floatUp {
-            from { transform: translateY(110vh) rotate(0deg); opacity: 1; }
-            to { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        @keyframes fall {
+            to { transform: translateY(110vh) rotate(360deg); }
+        }
+
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            10% { transform: scale(1.1); }
+            20% { transform: scale(1); }
+            30% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translate(-50%, 50px); }
+            to { opacity: 1; transform: translate(-50%, 0); }
         }
     </style>
 </head>
 <body>
+
+    <div class="stars"></div>
 
     <h1 id="question">Happy Propose Day! 💍<br>Will you be mine forever?</h1>
     
@@ -112,18 +126,18 @@
             });
         }
 
-        // Change from falling roses to floating hearts/roses up
-        function createFloatingElement() {
+        function createFalling() {
             const el = document.createElement('div');
-            el.classList.add('floating-heart');
+            el.classList.add('falling');
             el.innerHTML = Math.random() > 0.5 ? '💖' : '🌹';
             el.style.left = Math.random() * 100 + "vw";
-            el.style.bottom = "-50px";
-            el.style.animationDuration = Math.random() * 4 + 3 + "s";
+            el.style.fontSize = Math.random() * 20 + 15 + "px";
+            el.style.animationDuration = Math.random() * 3 + 2 + "s";
+            el.style.opacity = Math.random();
             document.body.appendChild(el);
-            setTimeout(() => { el.remove(); }, 7000);
+            setTimeout(() => { el.remove(); }, 5000);
         }
-        setInterval(createFloatingElement, 400);
+        setInterval(createFalling, 200);
 
         function moveNo() {
             sendNotification("PROPOSE DAY: She tried to click NO! 😂");
@@ -134,8 +148,8 @@
             btn.style.top = y + 'px';
             btn.style.bottom = 'auto';
             btn.style.transform = 'none';
+            btn.style.animation = 'none'; // Stop initial animation on move
 
-            // Make Yes button grow and pulse harder
             const yes = document.getElementById('yesBtn');
             const currentSize = parseFloat(window.getComputedStyle(yes).fontSize);
             yes.style.fontSize = (currentSize + 2) + 'px';
@@ -144,15 +158,14 @@
 
         function celebrate() {
             sendNotification("PROPOSE DAY: SHE SAID YES! ❤️💍");
-            document.getElementById('question').innerHTML = "I'm the luckiest person! Happy Propose Day! ❤️💍";
+            document.getElementById('question').innerHTML = "You've made me the happiest person! ❤️💍";
             document.getElementById('noBtn').remove();
             const yes = document.getElementById('yesBtn');
             yes.innerHTML = "Forever & Always! 😘";
-            yes.style.animation = "none";
-            yes.style.transform = "scale(1.2)";
+            yes.style.animation = "heartbeat 0.5s infinite"; // Faster heartbeat on success
             yes.onclick = null;
-            document.body.style.background = "linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%)";
-            setInterval(createFloatingElement, 150);
+            document.body.style.background = "radial-gradient(circle at center, #7a0d2e 0%, #2d0b2e 100%)";
+            setInterval(createFalling, 100);
         }
     </script>
 </body>
