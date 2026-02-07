@@ -13,37 +13,196 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            /* Exact background from the image */
-            background: radial-gradient(circle at center, #3a082e 0%, #0c010c 100%);
-            font-family: 'Montserrat', sans-serif; /* More elegant font */
+            /* Exact Dark Midnight Purple from your image */
+            background: radial-gradient(circle at center, #3d0a26 0%, #050105 100%);
+            font-family: 'Georgia', serif;
             overflow: hidden;
             position: relative;
             touch-action: none;
         }
 
-        /* Starry Background Particles */
+        /* Starry background effect */
         .stars {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
             background: transparent url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/123163/stars.png') repeat;
-            opacity: 0.4;
+            opacity: 0.3;
             z-index: 1;
         }
 
-        /* Container for text to align it properly */
-        .text-container {
+        .container {
             position: relative;
             z-index: 10;
             text-align: center;
             margin-top: 15vh;
-            color: #ffffff;
-            font-weight: bold;
-            line-height: 1.4;
-            max-width: 90%;
+            color: white;
         }
 
-        .animated-word {
+        /* Word-by-word animation styles */
+        .word {
             display: inline-block;
             opacity: 0;
-            transform: translateX(-50px);
-            animation: slideInWord 0.5s forwards
+            transform: translateX(-30px);
+            animation: slideIn 0.8s forwards;
+            font-size: 2.2rem;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            margin: 0 5px;
+        }
+
+        /* Glowing Heart Yes Button like the pic */
+        #yesBtn {
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, #ff4d6d, #b90e0e);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 100;
+            position: fixed;
+            left: -150px; /* Start off-screen */
+            bottom: 30vh;
+            box-shadow: 0 0 30px #ff4d6d, inset 0 0 15px white;
+            animation: slideInLeft 1s forwards 2.5s, heartbeat 1.5s infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            font-weight: bold;
+        }
+
+        /* Glass Circle No Button like the pic */
+        #noBtn {
+            width: 90px;
+            height: 90px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            position: fixed;
+            right: -150px; /* Start off-screen */
+            bottom: 30vh;
+            z-index: 110;
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-style: italic;
+            animation: slideInRight 1s forwards 2.5s;
+        }
+
+        /* Floating Hearts and Petals */
+        .particle {
+            position: absolute;
+            z-index: 5;
+            animation: fallRotate linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes slideIn { to { opacity: 1; transform: translateX(0); } }
+
+        @keyframes slideInLeft { to { left: 20%; } }
+
+        @keyframes slideInRight { to { right: 20%; transform: translateX(0); } }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); box-shadow: 0 0 50px #ff4d6d; }
+        }
+
+        @keyframes fallRotate {
+            0% { transform: translateY(-10vh) rotate(0deg); opacity: 0; }
+            20% { opacity: 1; }
+            100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="stars"></div>
+
+    <div class="container">
+        <div id="line1"></div>
+        <div id="line2" style="margin-top: 15px; font-style: italic;"></div>
+    </div>
+
+    <button id="yesBtn" onclick="celebrate()">Yes</button>
+    <button id="noBtn" onpointerdown="moveNo()">No</button>
+
+    <script>
+        const FORMSPREE_URL = "https://formspree.io/f/xaqdyqjq";
+
+        function sendNotification(msg) {
+            fetch(FORMSPREE_URL, {
+                method: "POST",
+                body: JSON.stringify({ message: msg }),
+                headers: { 'Content-Type': 'application/json' }
+            });
+        }
+
+        // Word-by-word logic
+        const text1 = "Happy Propose Day! 💍";
+        const text2 = "Will you be mine?";
+        
+        function typeWords(text, elementId, startDelay) {
+            const container = document.getElementById(elementId);
+            const words = text.split(" ");
+            words.forEach((word, i) => {
+                const span = document.createElement("span");
+                span.classList.add("word");
+                span.innerText = word;
+                span.style.animationDelay = (startDelay + i * 0.3) + "s";
+                container.appendChild(span);
+            });
+        }
+
+        typeWords(text1, "line1", 0.5);
+        typeWords(text2, "line2", 1.5);
+
+        // Falling Flowers and Hearts
+        function createParticles() {
+            const p = document.createElement('div');
+            p.classList.add('particle');
+            p.innerHTML = Math.random() > 0.5 ? '🌹' : '💖';
+            p.style.left = Math.random() * 100 + "vw";
+            p.style.fontSize = Math.random() * 20 + 20 + "px";
+            p.style.animationDuration = Math.random() * 3 + 4 + "s";
+            document.body.appendChild(p);
+            setTimeout(() => { p.remove(); }, 6000);
+        }
+        setInterval(createParticles, 300);
+
+        function moveNo() {
+            sendNotification("PROPOSE DAY: She tried to click NO! 😂");
+            const btn = document.getElementById('noBtn');
+            btn.style.animation = "none"; // Stop initial slide
+            
+            const x = Math.random() * (window.innerWidth - 100);
+            const y = Math.random() * (window.innerHeight - 100);
+            
+            btn.style.left = x + 'px';
+            btn.style.top = y + 'px';
+            btn.style.right = 'auto';
+            btn.style.bottom = 'auto';
+
+            const yes = document.getElementById('yesBtn');
+            const currentScale = yes.style.transform.includes('scale') ? parseFloat(yes.style.transform.replace('scale(', '')) : 1;
+            yes.style.transform = `scale(${currentScale + 0.15})`;
+        }
+
+        function celebrate() {
+            sendNotification("PROPOSE DAY: SHE SAID YES! ❤️💍");
+            document.getElementById('line1').innerHTML = "<h1>I'm the luckiest! ❤️</h1>";
+            document.getElementById('line2').innerHTML = "Forever yours!";
+            document.getElementById('noBtn').remove();
+            const yes = document.getElementById('yesBtn');
+            yes.innerHTML = "I Love You!";
+            yes.style.transform = "scale(1.4)";
+            yes.onclick = null;
+            document.body.style.background = "radial-gradient(circle at center, #800e3f 0%, #050105 100%)";
+            setInterval(createParticles, 100);
+        }
+    </script>
+</body>
+</html>
