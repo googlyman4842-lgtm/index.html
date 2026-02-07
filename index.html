@@ -13,21 +13,26 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            /* Exact Dark Midnight Purple from your image */
-            background: radial-gradient(circle at center, #3d0a26 0%, #050105 100%);
-            font-family: 'Georgia', serif;
+            /* Exact Deep Midnight Background from Pic */
+            background: radial-gradient(circle at 50% 50%, #2b061e 0%, #000000 100%);
+            font-family: 'Times New Roman', serif;
             overflow: hidden;
             position: relative;
             touch-action: none;
         }
 
-        /* Starry background effect */
-        .stars {
+        /* Tiny Shining Stars */
+        .star {
             position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: transparent url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/123163/stars.png') repeat;
-            opacity: 0.3;
-            z-index: 1;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.5;
+            animation: twinkle var(--duration) infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
         }
 
         .container {
@@ -35,92 +40,93 @@
             z-index: 10;
             text-align: center;
             margin-top: 15vh;
-            color: white;
         }
 
-        /* Word-by-word animation styles */
+        /* Word-by-word animation */
         .word {
             display: inline-block;
             opacity: 0;
-            transform: translateX(-30px);
+            transform: translateX(-40px);
             animation: slideIn 0.8s forwards;
-            font-size: 2.2rem;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-            margin: 0 5px;
+            font-size: 2.4rem;
+            color: #ffffff;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+            margin: 0 6px;
         }
 
-        /* Glowing Heart Yes Button like the pic */
+        /* The Heart Button from the Pic */
         #yesBtn {
-            width: 100px;
+            width: 110px;
             height: 100px;
-            background: radial-gradient(circle, #ff4d6d, #b90e0e);
+            background: #ff0040;
+            clip-path: path('M12 4.419c-2.826-5.695-11.999-4.064-11.999 3.27 0 7.27 9.903 10.938 11.999 15.311 2.096-4.373 12-8.041 12-15.311 0-7.327-9.17-8.972-12-3.27z');
+            /* Using a simple transform to scale the heart shape */
+            transform: translate(-50%, 0) scale(4); 
             color: white;
             border: none;
-            border-radius: 50%;
             cursor: pointer;
             z-index: 100;
             position: fixed;
-            left: -150px; /* Start off-screen */
-            bottom: 30vh;
-            box-shadow: 0 0 30px #ff4d6d, inset 0 0 15px white;
-            animation: slideInLeft 1s forwards 2.5s, heartbeat 1.5s infinite;
+            left: -200px;
+            bottom: 35vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.4rem;
+            font-size: 6px; /* Text is small because scale is 4 */
             font-weight: bold;
+            box-shadow: 0 0 30px #ff0040;
+            animation: slideInLeft 1.2s forwards 2.5s, heartbeat 1.5s infinite;
         }
 
-        /* Glass Circle No Button like the pic */
+        /* The Glass Circle No Button from the Pic */
         #noBtn {
             width: 90px;
             height: 90px;
             background: rgba(255, 255, 255, 0.1);
             color: white;
-            border: 2px solid rgba(255, 255, 255, 0.5);
+            border: 1.5px solid rgba(255, 255, 255, 0.4);
             border-radius: 50%;
             position: fixed;
-            right: -150px; /* Start off-screen */
-            bottom: 30vh;
+            right: -200px;
+            bottom: 35vh;
             z-index: 110;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(8px);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             font-style: italic;
-            animation: slideInRight 1s forwards 2.5s;
+            animation: slideInRight 1.2s forwards 2.7s;
         }
 
-        /* Floating Hearts and Petals */
-        .particle {
+        /* Falling Petals */
+        .petal {
             position: absolute;
+            color: #ff4d6d;
+            font-size: 20px;
             z-index: 5;
             animation: fallRotate linear infinite;
-            pointer-events: none;
         }
 
         @keyframes slideIn { to { opacity: 1; transform: translateX(0); } }
-
-        @keyframes slideInLeft { to { left: 20%; } }
-
-        @keyframes slideInRight { to { right: 20%; transform: translateX(0); } }
+        @keyframes slideInLeft { to { left: 30%; transform: translate(-50%, 0) scale(4); } }
+        @keyframes slideInRight { to { right: 20%; } }
 
         @keyframes heartbeat {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); box-shadow: 0 0 50px #ff4d6d; }
+            0%, 100% { filter: drop-shadow(0 0 10px #ff0040); }
+            50% { filter: drop-shadow(0 0 25px #ff0040); }
         }
 
         @keyframes fallRotate {
             0% { transform: translateY(-10vh) rotate(0deg); opacity: 0; }
             20% { opacity: 1; }
-            100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+            100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
         }
     </style>
 </head>
 <body>
 
-    <div class="stars"></div>
+    <div id="starField"></div>
 
     <div class="container">
         <div id="line1"></div>
@@ -141,67 +147,74 @@
             });
         }
 
-        // Word-by-word logic
-        const text1 = "Happy Propose Day! 💍";
-        const text2 = "Will you be mine?";
+        // Create Small Shining Stars
+        const starField = document.getElementById('starField');
+        for (let i = 0; i < 80; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            const size = Math.random() * 3 + 'px';
+            star.style.width = size;
+            star.style.height = size;
+            star.style.top = Math.random() * 100 + 'vh';
+            star.style.left = Math.random() * 100 + 'vw';
+            star.style.setProperty('--duration', Math.random() * 3 + 2 + 's');
+            starField.appendChild(star);
+        }
+
+        // Side-slide word animation
+        const t1 = "Happy Propose Day! 💍";
+        const t2 = "Will you be mine?";
         
-        function typeWords(text, elementId, startDelay) {
-            const container = document.getElementById(elementId);
-            const words = text.split(" ");
-            words.forEach((word, i) => {
-                const span = document.createElement("span");
-                span.classList.add("word");
-                span.innerText = word;
-                span.style.animationDelay = (startDelay + i * 0.3) + "s";
-                container.appendChild(span);
+        function animateWords(text, elementId, start) {
+            const el = document.getElementById(elementId);
+            text.split(" ").forEach((w, i) => {
+                const s = document.createElement("span");
+                s.className = "word";
+                s.innerText = w;
+                s.style.animationDelay = (start + i * 0.25) + "s";
+                el.appendChild(s);
             });
         }
+        animateWords(t1, "line1", 0.4);
+        animateWords(t2, "line2", 1.4);
 
-        typeWords(text1, "line1", 0.5);
-        typeWords(text2, "line2", 1.5);
-
-        // Falling Flowers and Hearts
-        function createParticles() {
+        // Falling Flowers/Petals
+        function createPetal() {
             const p = document.createElement('div');
-            p.classList.add('particle');
-            p.innerHTML = Math.random() > 0.5 ? '🌹' : '💖';
+            p.className = 'petal';
+            p.innerHTML = Math.random() > 0.5 ? '🌸' : '🌹';
             p.style.left = Math.random() * 100 + "vw";
-            p.style.fontSize = Math.random() * 20 + 20 + "px";
-            p.style.animationDuration = Math.random() * 3 + 4 + "s";
+            p.style.animationDuration = Math.random() * 4 + 5 + "s";
             document.body.appendChild(p);
-            setTimeout(() => { p.remove(); }, 6000);
+            setTimeout(() => p.remove(), 8000);
         }
-        setInterval(createParticles, 300);
+        setInterval(createPetal, 400);
 
         function moveNo() {
             sendNotification("PROPOSE DAY: She tried to click NO! 😂");
             const btn = document.getElementById('noBtn');
-            btn.style.animation = "none"; // Stop initial slide
-            
+            btn.style.animation = "none";
             const x = Math.random() * (window.innerWidth - 100);
             const y = Math.random() * (window.innerHeight - 100);
-            
             btn.style.left = x + 'px';
             btn.style.top = y + 'px';
             btn.style.right = 'auto';
             btn.style.bottom = 'auto';
 
             const yes = document.getElementById('yesBtn');
-            const currentScale = yes.style.transform.includes('scale') ? parseFloat(yes.style.transform.replace('scale(', '')) : 1;
-            yes.style.transform = `scale(${currentScale + 0.15})`;
+            yes.style.filter = "drop-shadow(0 0 40px #ff0040)";
         }
 
         function celebrate() {
             sendNotification("PROPOSE DAY: SHE SAID YES! ❤️💍");
-            document.getElementById('line1').innerHTML = "<h1>I'm the luckiest! ❤️</h1>";
-            document.getElementById('line2').innerHTML = "Forever yours!";
+            document.getElementById('line1').innerHTML = "<h1 style='color:white'>Forever Yours! ❤️</h1>";
+            document.getElementById('line2').innerHTML = "I am so happy!";
             document.getElementById('noBtn').remove();
             const yes = document.getElementById('yesBtn');
-            yes.innerHTML = "I Love You!";
-            yes.style.transform = "scale(1.4)";
+            yes.style.animation = "none";
+            yes.style.transform = "translate(-50%, 0) scale(6)";
             yes.onclick = null;
-            document.body.style.background = "radial-gradient(circle at center, #800e3f 0%, #050105 100%)";
-            setInterval(createParticles, 100);
+            setInterval(createPetal, 150);
         }
     </script>
 </body>
