@@ -11,7 +11,8 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            background: #ffe3e3;
+            /* Romantic Gradient Background */
+            background: linear-gradient(135deg, #ffafbd 0%, #ffc3a0 100%);
             font-family: 'Arial', sans-serif;
             margin: 0;
             overflow: hidden;
@@ -19,54 +20,78 @@
             touch-action: none;
         }
 
+        /* Floating Bokeh Effects */
+        body::before {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(circle, rgba(255,255,255,0.3) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: 1;
+        }
+
         h1 { 
-            color: #ff4d6d; 
+            color: #ffffff; 
             text-align: center; 
             z-index: 10; 
             margin-top: 20vh;
             padding: 20px; 
-            font-size: 1.8rem; 
+            font-size: 2rem; 
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.1);
             pointer-events: none; 
         }
 
+        /* Pulsing "Heartbeat" Yes Button */
         #yesBtn {
-            padding: 15px 40px;
-            font-size: 1.2rem;
+            padding: 18px 50px;
+            font-size: 1.3rem;
             background: #ff4d6d;
             color: white;
             border: none;
             border-radius: 50px;
             cursor: pointer;
             z-index: 100;
-            margin-top: 50px;
-            transition: transform 0.1s;
+            margin-top: 30px;
+            box-shadow: 0 10px 20px rgba(255, 77, 109, 0.4);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+            100% { transform: scale(1); }
         }
 
         #noBtn {
             padding: 10px 25px;
             font-size: 1rem;
-            background: #ffffff;
+            background: rgba(255, 255, 255, 0.9);
             color: #333;
-            border: 1px solid #ccc;
+            border: none;
             border-radius: 50px;
             position: fixed;
             left: 50%;
-            bottom: 15vh;
+            bottom: 12vh;
             transform: translateX(-50%);
             z-index: 110;
             touch-action: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
 
-        .rose {
+        .floating-heart {
             position: absolute;
-            top: -50px;
             font-size: 24px;
             z-index: 5;
-            animation: fall linear infinite;
+            animation: floatUp linear infinite;
             pointer-events: none;
+            opacity: 0.7;
         }
 
-        @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
+        @keyframes floatUp {
+            from { transform: translateY(110vh) rotate(0deg); opacity: 1; }
+            to { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        }
     </style>
 </head>
 <body>
@@ -87,47 +112,47 @@
             });
         }
 
-        function createRose() {
-            const rose = document.createElement('div');
-            rose.classList.add('rose');
-            rose.innerHTML = '🌹';
-            rose.style.left = Math.random() * 100 + "vw";
-            rose.style.animationDuration = Math.random() * 3 + 2 + "s";
-            document.body.appendChild(rose);
-            setTimeout(() => { rose.remove(); }, 5000);
+        // Change from falling roses to floating hearts/roses up
+        function createFloatingElement() {
+            const el = document.createElement('div');
+            el.classList.add('floating-heart');
+            el.innerHTML = Math.random() > 0.5 ? '💖' : '🌹';
+            el.style.left = Math.random() * 100 + "vw";
+            el.style.bottom = "-50px";
+            el.style.animationDuration = Math.random() * 4 + 3 + "s";
+            document.body.appendChild(el);
+            setTimeout(() => { el.remove(); }, 7000);
         }
-        setInterval(createRose, 300);
+        setInterval(createFloatingElement, 400);
 
         function moveNo() {
             sendNotification("PROPOSE DAY: She tried to click NO! 😂");
-
             const btn = document.getElementById('noBtn');
-            const x = Math.random() * (window.innerWidth - btn.offsetWidth);
-            const y = Math.random() * (window.innerHeight - btn.offsetHeight);
-            
+            const x = Math.random() * (window.innerWidth - btn.offsetWidth - 40) + 20;
+            const y = Math.random() * (window.innerHeight - btn.offsetHeight - 40) + 20;
             btn.style.left = x + 'px';
             btn.style.top = y + 'px';
             btn.style.bottom = 'auto';
             btn.style.transform = 'none';
 
+            // Make Yes button grow and pulse harder
             const yes = document.getElementById('yesBtn');
-            const currentScale = yes.style.transform ? parseFloat(yes.style.transform.replace('scale(', '')) : 1;
-            yes.style.transform = `scale(${currentScale + 0.2})`;
+            const currentSize = parseFloat(window.getComputedStyle(yes).fontSize);
+            yes.style.fontSize = (currentSize + 2) + 'px';
+            yes.style.padding = (currentSize + 5) + 'px';
         }
 
         function celebrate() {
             sendNotification("PROPOSE DAY: SHE SAID YES! ❤️💍");
-
             document.getElementById('question').innerHTML = "I'm the luckiest person! Happy Propose Day! ❤️💍";
             document.getElementById('noBtn').remove();
-            
             const yes = document.getElementById('yesBtn');
             yes.innerHTML = "Forever & Always! 😘";
+            yes.style.animation = "none";
             yes.style.transform = "scale(1.2)";
             yes.onclick = null;
-            
-            document.body.style.background = "#ffb3c1";
-            setInterval(createRose, 100);
+            document.body.style.background = "linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%)";
+            setInterval(createFloatingElement, 150);
         }
     </script>
 </body>
